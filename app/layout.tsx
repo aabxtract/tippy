@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "STX Pay - The modern way to send STX",
+  title: "Tippy - The modern way to send STX",
   description: "Send, bulk send, and tip in STX with ease on the Stacks blockchain.",
 };
 

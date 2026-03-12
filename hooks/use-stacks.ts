@@ -51,6 +51,10 @@ export function useStacks() {
     try {
       await connect({
         forceWalletSelect: true,
+        appDetails: {
+          name: 'Tippy',
+          icon: typeof window !== 'undefined' ? window.location.origin + '/favicon.ico' : '',
+        }
       });
       checkUserSession();
     } catch (error) {

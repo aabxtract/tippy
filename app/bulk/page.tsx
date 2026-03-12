@@ -105,7 +105,7 @@ export default function BulkSendPage() {
         const response = await request("stx_transferStx", {
           recipient: recipient.address,
           amount: (parseFloat(recipient.amount) * 1000000).toString(),
-          memo: "Bulk Send via STX Pay",
+          memo: "Bulk Send via Tippy",
         });
 
         if (response.txid) {

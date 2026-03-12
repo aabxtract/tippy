@@ -49,7 +49,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
       const response = await request("stx_transferStx", {
         recipient: address,
         amount: (parseFloat(tipAmount) * 1000000).toString(),
-        memo: "Tip via STX Pay",
+        memo: "Tip via Tippy",
       });
 
       if (response.txid) {

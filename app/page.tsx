@@ -32,7 +32,7 @@ export default function SendPage() {
       const response = await request("stx_transferStx", {
         recipient,
         amount: (parseFloat(amount) * 1000000).toString(), // convert to microstacks
-        memo: "Sent via STX Pay",
+        memo: "Sent via Tippy",
       });
 
       if (response.txid) {

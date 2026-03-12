@@ -29,7 +29,7 @@ export function Navbar() {
           <div className="w-10 h-10 bg-gradient-to-br from-[var(--primary)] to-[var(--accent)] rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
             <Wallet className="text-white w-6 h-6" />
           </div>
-          <span className="font-bold text-xl tracking-tight hidden sm:block">STX Pay</span>
+          <span className="font-bold text-xl tracking-tight hidden sm:block">Tippy</span>
         </Link>
 
         {/* Desktop Nav */}
