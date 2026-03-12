@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tippy 🥤
 
-## Getting Started
+Tippy is a modern, premium Web3 application built on the **Stacks blockchain**. It provides a seamless experience for sending, bulk-sending, and receiving tips in STX.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **🚀 Single Send**: Send STX to any Stacks address with real-time status tracking.
+- **📦 Bulk Send**: Distribute STX to multiple recipients at once. Supports CSV upload and copy-paste for rapid operations.
+- **🥤 Tip Me**: Create your own shareable tip link (e.g., `tippy.stx/your-address`) and receive STX from your audience with a beautiful profile page.
+- **👛 Hiro Wallet Integrated**: Seamless connection with the Hiro Wallet (via Stacks Connect v8).
+- **💅 Premium UI**: Built with Next.js 15, Tailwind CSS v4, and Framer Motion for a stunning glassmorphism aesthetic.
+- **⚡ Real-time Feedback**: Detailed transaction statuses (Pending, Success, Failed) with direct links to the Stacks Explorer.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Node.js 18+
+- [Hiro Wallet](https://wallet.hiro.so/) browser extension
 
-## Learn More
+### Installation
 
-To learn more about Next.js, take a look at the following resources:
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/tippy.git
+    cd tippy
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
 
-## Deploy on Vercel
+4.  **Open your browser:**
+    Navigate to `http://localhost:3000`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Built With
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework**: [Next.js 15](https://nextjs.org/)
+- **Blockchain SDK**: [Stacks.js v7/v8](https://github.com/hirosystems/stacks.js)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **CSV Parsing**: [PapaParse](https://www.papaparse.com/)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+Built with 🧡 for the Stacks Ecosystem.
