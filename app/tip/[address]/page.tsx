@@ -2,7 +2,7 @@
 
 import { use, useState, useEffect } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-import { openSTXTransfer } from "@stacks/connect";
+// import { request } from "@stacks/connect"; // Use dynamic import for client-side only
 import { STACKS_MAINNET } from "@stacks/network";
 import { Heart, Send, CheckCircle2, AlertCircle, Loader2, Sparkles, User, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,14 +45,18 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
 
     setStatus("pending");
     try {
-      await openSTXTransfer({
+      const { request } = await import("@stacks/connect");
+      const response = await request("stx_transferStx", {
         recipient: address,
         amount: (parseFloat(tipAmount) * 1000000).toString(),
         memo: "Tip via STX Pay",
-        network: STACKS_MAINNET,
-        onFinish: () => setStatus("success"),
-        onCancel: () => setStatus("idle"),
       });
+
+      if (response.txid) {
+        setStatus("success");
+      } else {
+        setStatus("idle");
+      }
     } catch (error) {
       setStatus("failed");
     }

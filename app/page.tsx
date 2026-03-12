@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-import { openSTXTransfer } from "@stacks/connect";
+// import { request } from "@stacks/connect"; // Use dynamic import for client-side only
 import { STACKS_MAINNET } from "@stacks/network";
 import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,21 +28,20 @@ export default function SendPage() {
     setErrorMessage("");
 
     try {
-      await openSTXTransfer({
+      const { request } = await import("@stacks/connect");
+      const response = await request("stx_transferStx", {
         recipient,
         amount: (parseFloat(amount) * 1000000).toString(), // convert to microstacks
         memo: "Sent via STX Pay",
-        network: STACKS_MAINNET,
-        onFinish: (data) => {
-          console.log("Transaction finished:", data);
-          setTxId(data.txId);
-          setStatus("success");
-        },
-        onCancel: () => {
-          console.log("Transaction canceled");
-          setStatus("idle");
-        },
       });
+
+      if (response.txid) {
+        console.log("Transaction finished:", response.txid);
+        setTxId(response.txid);
+        setStatus("success");
+      } else {
+        setStatus("idle");
+      }
     } catch (error: any) {
       console.error("Transaction failed:", error);
       setStatus("failed");

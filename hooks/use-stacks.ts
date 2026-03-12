@@ -1,9 +1,9 @@
-import { AppConfig, UserSession, showConnect } from '@stacks/connect';
+import { AppConfig, UserSession } from '@stacks/connect';
 import { STACKS_MAINNET } from '@stacks/network';
 import { useState, useEffect, useCallback } from 'react';
 
-const appConfig = new AppConfig(['store_write', 'publish_data']);
-export const userSession = new UserSession({ appConfig });
+const appConfig = typeof window !== 'undefined' ? new AppConfig(['store_write', 'publish_data']) : null;
+export const userSession = typeof window !== 'undefined' ? new UserSession({ appConfig }) : null;
 export const network = STACKS_MAINNET;
 
 export function useStacks() {
@@ -12,6 +12,8 @@ export function useStacks() {
   const [loading, setLoading] = useState(true);
 
   const checkUserSession = useCallback(() => {
+    if (typeof window === 'undefined' || !userSession) return;
+    
     if (userSession.isUserSignedIn()) {
       setUserData(userSession.loadUserData());
     } else if (userSession.isSignInPending()) {
@@ -43,22 +45,23 @@ export function useStacks() {
     }
   };
 
-  const connectWallet = () => {
-    showConnect({
-      appDetails: {
-        name: 'STX Pay',
-        icon: window.location.origin + '/favicon.ico',
-      },
-      redirectTo: '/',
-      onFinish: () => {
-        window.location.reload();
-      },
-      userSession,
-    });
+  const connectWallet = async () => {
+    if (typeof window === 'undefined') return;
+    const { connect } = await import('@stacks/connect');
+    try {
+      await connect({
+        forceWalletSelect: true,
+      });
+      checkUserSession();
+    } catch (error) {
+      console.error('Connection failed:', error);
+    }
   };
 
-  const disconnectWallet = () => {
-    userSession.signUserOut();
+  const disconnectWallet = async () => {
+    if (typeof window === 'undefined') return;
+    const { disconnect } = await import('@stacks/connect');
+    disconnect();
     setUserData(null);
     setBalance('0');
   };

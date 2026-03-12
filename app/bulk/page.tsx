@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-import { openSTXTransfer } from "@stacks/connect";
+// import { request } from "@stacks/connect"; // Use dynamic import for client-side only
 import { STACKS_MAINNET } from "@stacks/network";
 import { Layers, Plus, Trash2, Upload, FileJson, Send, AlertCircle, CheckCircle2, Loader2, Info, ClipboardPaste } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -101,22 +101,19 @@ export default function BulkSendPage() {
       updateRow(recipient.id, "status", "pending");
 
       try {
-        await new Promise((resolve, reject) => {
-          openSTXTransfer({
-            recipient: recipient.address,
-            amount: (parseFloat(recipient.amount) * 1000000).toString(),
-            memo: "Bulk Send via STX Pay",
-            network: STACKS_MAINNET,
-            onFinish: (data) => {
-              setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "success" } : r));
-              resolve(data);
-            },
-            onCancel: () => {
-              setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "idle" } : r));
-              reject("Canceled");
-            }
-          });
+        const { request } = await import("@stacks/connect");
+        const response = await request("stx_transferStx", {
+          recipient: recipient.address,
+          amount: (parseFloat(recipient.amount) * 1000000).toString(),
+          memo: "Bulk Send via STX Pay",
         });
+
+        if (response.txid) {
+          setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "success" } : r));
+        } else {
+          setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "idle" } : r));
+          break; // Stop on cancel
+        }
       } catch (err) {
         setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "failed", error: "Failed or Canceled" } : r));
         // Continue to next or stop? Usually stop on error for safety
