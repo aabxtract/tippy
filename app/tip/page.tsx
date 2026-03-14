@@ -42,8 +42,8 @@ export default function TipSetupPage() {
         senderAddress: stxAddress,
       });
 
-      const json = cvToJSON(result);
-      if (json.value) {
+      const json = cvToJSON(result) as any;
+      if (json && json.value) {
         setName(json.value.name.value);
         setBio(json.value.bio.value);
         setPrice((parseInt(json.value.price.value) / 1000000).toString());
@@ -61,7 +61,7 @@ export default function TipSetupPage() {
       const { request } = await import("@stacks/connect");
       const { stringAsciiCV, uintCV } = await import("@stacks/transactions");
       
-      await request("stx_callContract", {
+      const response = await request("stx_callContract", {
         contractAddress: CONTRACT_ADDRESS,
         contractName: CONTRACT_NAME,
         functionName: "set-profile",
@@ -70,12 +70,13 @@ export default function TipSetupPage() {
           stringAsciiCV(bio),
           uintCV(parseFloat(price) * 1000000)
         ],
-        onFinish: (data) => {
-          console.log("Profile updated:", data);
-          setStatus("success");
-          setTimeout(() => setStatus("idle"), 3000);
-        },
       });
+
+      if (response && (response as any).txid) {
+        console.log("Profile updated:", response);
+        setStatus("success");
+        setTimeout(() => setStatus("idle"), 3000);
+      }
     } catch (e) {
       console.error("Error updating profile:", e);
       setStatus("failed");

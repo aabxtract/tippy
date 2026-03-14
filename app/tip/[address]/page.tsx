@@ -40,8 +40,8 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
           senderAddress: address,
         });
 
-        const profileJson = cvToJSON(profileResult);
-        if (profileJson.value) {
+        const profileJson = cvToJSON(profileResult) as any;
+        if (profileJson && profileJson.value) {
           setProfile({
             name: profileJson.value.name.value,
             bio: profileJson.value.bio.value,
@@ -60,11 +60,13 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
           senderAddress: address,
         });
 
-        const statsJson = cvToJSON(statsResult);
-        setStats({
-          total: (parseInt(statsJson.value["total-received"].value) / 1000000).toFixed(2),
-          count: statsJson.value["total-tips"].value,
-        });
+        const statsJson = cvToJSON(statsResult) as any;
+        if (statsJson && statsJson.value) {
+          setStats({
+            total: (parseInt(statsJson.value["total-received"].value) / 1000000).toFixed(2),
+            count: statsJson.value["total-tips"].value,
+          });
+        }
 
       } catch (error) {
         console.error("Error fetching profile from contract:", error);
@@ -87,7 +89,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
       const { request } = await import("@stacks/connect");
       const { stringAsciiCV, uintCV, principalCV } = await import("@stacks/transactions");
       
-      await request("stx_callContract", {
+      const response = await request("stx_callContract", {
         contractAddress: CONTRACT_ADDRESS,
         contractName: CONTRACT_NAME,
         functionName: "tip",
@@ -96,12 +98,13 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
           uintCV(parseFloat(tipAmount) * 1000000),
           stringAsciiCV(message || "Buying you a coffee! ☕")
         ],
-        onFinish: (data) => {
-          console.log("Tip sent:", data);
-          setStatus("success");
-          setMessage("");
-        },
       });
+
+      if (response && (response as any).txid) {
+        console.log("Tip sent:", response);
+        setStatus("success");
+        setMessage("");
+      }
     } catch (error) {
       console.error("Tip failed:", error);
       setStatus("failed");
