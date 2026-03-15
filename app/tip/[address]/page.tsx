@@ -27,11 +27,8 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const { callReadOnlyFunction, cvToJSON, principalCV } = await import("@stacks/transactions");
-        const { STACKS_MAINNET } = await import("@stacks/network");
-        
         // Fetch Profile
-        const profileResult = await callReadOnlyFunction({
+        const profileResult = await fetchCallReadOnlyFunction({
           contractAddress: CONTRACT_ADDRESS,
           contractName: CONTRACT_NAME,
           functionName: "get-profile",
@@ -51,7 +48,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
         }
 
         // Fetch Stats
-        const statsResult = await callReadOnlyFunction({
+        const statsResult = await fetchCallReadOnlyFunction({
           contractAddress: CONTRACT_ADDRESS,
           contractName: CONTRACT_NAME,
           functionName: "get-stats",
@@ -86,7 +83,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
 
     setStatus("pending");
     try {
-      const { request } = await import("@stacks/connect");
+      const { request } = (await import("@stacks/connect")) as any;
       const { stringAsciiCV, uintCV, principalCV } = await import("@stacks/transactions");
       
       const response = await request("stx_callContract", {
