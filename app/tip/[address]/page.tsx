@@ -27,6 +27,9 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
+        const { fetchCallReadOnlyFunction, cvToJSON, principalCV } = await import("@stacks/transactions");
+        const { STACKS_MAINNET } = await import("@stacks/network");
+        
         // Fetch Profile
         const profileResult = await fetchCallReadOnlyFunction({
           contractAddress: CONTRACT_ADDRESS,
