@@ -1,4 +1,3 @@
-
 ;; STX Pay - Smart Contract
 ;; A utility contract for single sends, bulk sends, and personal tip jars.
 
@@ -36,6 +35,22 @@
   (default-to false (map-get? registered-jars who))
 )
 
+;; Helper to extract amount from recipient tuple
+(define-read-only (get-amount (item { to: principal, amount: uint }))
+  (get amount item)
+)
+
+;; --- Private Helpers ---
+
+;; Internal function to handle bulk transfers
+;; Note: If one transfer fails (e.g. insufficient funds), the whole bulk send reverts.
+(define-private (bulk-send-helper (item { to: principal, amount: uint }) (previous-result (response bool uint)))
+  (begin
+    (try! previous-result)
+    (stx-transfer? (get amount item) tx-sender (get to item))
+  )
+)
+
 ;; --- Public Functions ---
 
 ;; 1. SINGLE SEND
@@ -56,8 +71,8 @@
     ((total-amount (fold + (map get-amount recipients) u0)))
     (begin
       (asserts! (> (len recipients) u0) ERR-EMPTY-LIST)
-      ;; Execute transfers using a map over a private function
-      (map bulk-send-helper recipients)
+      ;; Execute transfers using a fold to propagate errors
+      (try! (fold bulk-send-helper recipients (ok true)))
       (print { action: "bulk-send", sender: tx-sender, total-recipients: (len recipients), total-amount: total-amount })
       (ok true)
     )
@@ -113,17 +128,4 @@
       (ok true)
     )
   )
-)
-
-;; --- Private Helpers ---
-
-;; Helper to extract amount from recipient tuple
-(define-read-only (get-amount (item { to: principal, amount: uint }))
-  (get amount item)
-)
-
-;; Internal function to handle bulk transfers
-;; Note: If one transfer fails (e.g. insufficient funds), the whole bulk send reverts.
-(define-private (bulk-send-helper (item { to: principal, amount: uint }))
-  (stx-transfer? (get amount item) tx-sender (get to item))
 )
