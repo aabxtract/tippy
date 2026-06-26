@@ -86,12 +86,11 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
 
     setStatus("pending");
     try {
-      const { request } = (await import("@stacks/connect")) as any;
+      const { request } = await import("@stacks/connect");
       const { stringAsciiCV, uintCV, principalCV } = await import("@stacks/transactions");
       
       const response = await request("stx_callContract", {
-        contractAddress: CONTRACT_ADDRESS,
-        contractName: CONTRACT_NAME,
+        contract: `${CONTRACT_ADDRESS}.${CONTRACT_NAME}`,
         functionName: "tip",
         functionArgs: [
           principalCV(address),
