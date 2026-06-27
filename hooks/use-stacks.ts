@@ -52,11 +52,15 @@ export function useStacks() {
     if (typeof window === 'undefined') return;
     try {
       const { connect } = await import('@stacks/connect');
-      await connect({
+      const result = await connect({
         forceWalletSelect: true,
       });
-      // After connection, re-check
-      checkConnection();
+      if (result.addresses?.stx && result.addresses.stx.length > 0) {
+        const stxAddr = result.addresses.stx[0].address;
+        setAddress(stxAddr);
+        setIsConnectedState(true);
+        fetchBalance(stxAddr);
+      }
     } catch (error) {
       console.error('Connection failed:', error);
     }
@@ -66,7 +70,7 @@ export function useStacks() {
     if (typeof window === 'undefined') return;
     try {
       const { disconnect } = await import('@stacks/connect');
-      disconnect();
+      await disconnect();
       setAddress('');
       setBalance('0');
       setIsConnectedState(false);
