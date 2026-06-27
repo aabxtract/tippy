@@ -28,7 +28,7 @@ body {
   background-attachment: fixed;
 }
 
-@layer components {
+@layer utilities {
   .glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
