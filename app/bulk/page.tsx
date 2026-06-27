@@ -2,9 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-// import { request } from "@stacks/connect"; // Use dynamic import for client-side only
-import { STACKS_MAINNET } from "@stacks/network";
-import { Layers, Plus, Trash2, Upload, FileJson, Send, AlertCircle, CheckCircle2, Loader2, Info, ClipboardPaste } from "lucide-react";
+import { Layers, Plus, Trash2, Upload, Send, AlertCircle, Loader2, Info, ClipboardPaste } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
 import { cn } from "@/lib/utils";

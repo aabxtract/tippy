@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-// import { request } from "@stacks/connect"; // Use dynamic import for client-side only
-import { STACKS_MAINNET } from "@stacks/network";
-import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Send, AlertCircle, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { StatusBadge } from "@/components/ui/status-badge";
 
