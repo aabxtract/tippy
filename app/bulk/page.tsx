@@ -18,7 +18,7 @@ interface Recipient {
 export default function BulkSendPage() {
   const { userData, connectWallet } = useStacks();
   const [recipients, setRecipients] = useState<Recipient[]>([
-    { id: Math.random().toString(), address: "", amount: "", status: "idle" }
+    { id: crypto.randomUUID(), address: "", amount: "", status: "idle" }
   ]);
   const [isSending, setIsSending] = useState(false);
   const [showPaste, setShowPaste] = useState(false);
@@ -29,7 +29,7 @@ export default function BulkSendPage() {
   }, [recipients]);
 
   const addRow = () => {
-    setRecipients([...recipients, { id: Math.random().toString(), address: "", amount: "", status: "idle" }]);
+    setRecipients([...recipients, { id: crypto.randomUUID(), address: "", amount: "", status: "idle" }]);
   };
 
   const removeRow = (id: string) => {
@@ -52,7 +52,7 @@ export default function BulkSendPage() {
       complete: (results: Papa.ParseResult<any>) => {
         const rows = results.data as string[][];
         const newRecipients = rows.map(row => ({
-          id: Math.random().toString(),
+          id: crypto.randomUUID(),
           address: row[0] || "",
           amount: row[1] || "",
           status: "idle" as const
@@ -69,7 +69,7 @@ export default function BulkSendPage() {
       complete: (results: Papa.ParseResult<any>) => {
         const rows = results.data as string[][];
         const newRecipients = rows.map(row => ({
-          id: Math.random().toString(),
+          id: crypto.randomUUID(),
           address: row[0]?.trim() || "",
           amount: row[1]?.trim() || "",
           status: "idle" as const
