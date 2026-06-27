@@ -2,7 +2,6 @@
 
 import { use, useState, useEffect } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-import { STACKS_MAINNET } from "@stacks/network";
 import { Heart, Send, CheckCircle2, AlertCircle, Loader2, Sparkles, User, ShieldCheck, Coffee, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
