@@ -2,10 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-import { Layers, Plus, Trash2, Upload, Send, AlertCircle, Loader2, Info, ClipboardPaste } from "lucide-react";
+import { Layers, Plus, Trash2, Upload, Send, Loader2, Info, ClipboardPaste } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
-import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/components/ui/status-badge";
 
 interface Recipient {
