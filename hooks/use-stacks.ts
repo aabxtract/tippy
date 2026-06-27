@@ -55,8 +55,8 @@ export function useStacks() {
       const result = await connect({
         forceWalletSelect: true,
       });
-      if (result.addresses?.stx && result.addresses.stx.length > 0) {
-        const stxAddr = result.addresses.stx[0].address;
+      if (result.addresses && result.addresses.length > 0) {
+        const stxAddr = result.addresses[0].address;
         setAddress(stxAddr);
         setIsConnectedState(true);
         fetchBalance(stxAddr);

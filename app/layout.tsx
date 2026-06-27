@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
@@ -32,7 +33,9 @@ export default function RootLayout({
         <Navbar />
         <main className="pt-28 pb-12 px-4 min-h-screen">
           <div className="max-w-4xl mx-auto">
-            {children}
+            <Suspense fallback={null}>
+              {children}
+            </Suspense>
           </div>
         </main>
       </body>
