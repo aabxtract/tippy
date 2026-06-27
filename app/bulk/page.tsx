@@ -2,10 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-import { Layers, Plus, Trash2, Upload, Send, AlertCircle, Loader2, Info, ClipboardPaste } from "lucide-react";
+import { Layers, Plus, Trash2, Upload, Send, Loader2, Info, ClipboardPaste } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
-import { cn } from "@/lib/utils";
 import { StatusBadge } from "@/components/ui/status-badge";
 
 interface Recipient {
@@ -19,7 +18,7 @@ interface Recipient {
 export default function BulkSendPage() {
   const { userData, connectWallet } = useStacks();
   const [recipients, setRecipients] = useState<Recipient[]>([
-    { id: Math.random().toString(), address: "", amount: "", status: "idle" }
+    { id: crypto.randomUUID(), address: "", amount: "", status: "idle" }
   ]);
   const [isSending, setIsSending] = useState(false);
   const [showPaste, setShowPaste] = useState(false);
@@ -30,7 +29,7 @@ export default function BulkSendPage() {
   }, [recipients]);
 
   const addRow = () => {
-    setRecipients([...recipients, { id: Math.random().toString(), address: "", amount: "", status: "idle" }]);
+    setRecipients([...recipients, { id: crypto.randomUUID(), address: "", amount: "", status: "idle" }]);
   };
 
   const removeRow = (id: string) => {
@@ -53,7 +52,7 @@ export default function BulkSendPage() {
       complete: (results: Papa.ParseResult<any>) => {
         const rows = results.data as string[][];
         const newRecipients = rows.map(row => ({
-          id: Math.random().toString(),
+          id: crypto.randomUUID(),
           address: row[0] || "",
           amount: row[1] || "",
           status: "idle" as const
@@ -70,7 +69,7 @@ export default function BulkSendPage() {
       complete: (results: Papa.ParseResult<any>) => {
         const rows = results.data as string[][];
         const newRecipients = rows.map(row => ({
-          id: Math.random().toString(),
+          id: crypto.randomUUID(),
           address: row[0]?.trim() || "",
           amount: row[1]?.trim() || "",
           status: "idle" as const
@@ -90,7 +89,7 @@ export default function BulkSendPage() {
     }
 
     setIsSending(true);
-    
+
     // We'll iterate through them. In a real app, one might use a smart contract for bulk transfers.
     for (let i = 0; i < recipients.length; i++) {
       const recipient = recipients[i];
@@ -151,7 +150,7 @@ export default function BulkSendPage() {
             <p className="text-sm text-white/40">Add rows manually or upload a CSV file</p>
           </div>
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={() => setShowPaste(!showPaste)}
               className="btn-secondary py-2 px-4 text-sm flex items-center gap-2"
             >
@@ -171,7 +170,7 @@ export default function BulkSendPage() {
         </div>
 
         {showPaste && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             className="space-y-4 bg-white/5 p-4 rounded-2xl border border-white/10"
@@ -186,8 +185,8 @@ export default function BulkSendPage() {
               />
             </div>
             <div className="flex justify-end gap-2">
-                <button onClick={() => setShowPaste(false)} className="text-xs text-white/40 hover:text-white px-4 py-2">Cancel</button>
-                <button onClick={handlePaste} className="btn-primary py-2 px-6 text-xs">Import Data</button>
+              <button onClick={() => setShowPaste(false)} className="text-xs text-white/40 hover:text-white px-4 py-2">Cancel</button>
+              <button onClick={handlePaste} className="btn-primary py-2 px-6 text-xs">Import Data</button>
             </div>
           </motion.div>
         )}
@@ -272,7 +271,7 @@ export default function BulkSendPage() {
         <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 flex items-start gap-3">
           <Info className="w-5 h-5 text-blue-400 mt-0.5" />
           <p className="text-xs text-blue-300 leading-relaxed">
-            Note: You will be prompted by your wallet to sign each transaction sequentially. 
+            Note: You will be prompted by your wallet to sign each transaction sequentially.
             Ensure your wallet has enough balance to cover the total amount and network fees for each transaction.
           </p>
         </div>
