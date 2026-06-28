@@ -22,6 +22,19 @@ export default function SendPage() {
 
     if (!recipient || !amount) return;
 
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      setStatus("failed");
+      setErrorMessage("Amount must be greater than 0");
+      return;
+    }
+
+    if (!recipient.startsWith("SP") && !recipient.startsWith("SM")) {
+      setStatus("failed");
+      setErrorMessage("Invalid address. Must start with SP or SM");
+      return;
+    }
+
     setStatus("pending");
     setErrorMessage("");
 
