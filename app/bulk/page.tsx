@@ -95,6 +95,19 @@ export default function BulkSendPage() {
       const recipient = recipients[i];
       if (!recipient.address || !recipient.amount) continue;
 
+      const parsedAmount = parseFloat(recipient.amount);
+      if (isNaN(parsedAmount) || parsedAmount <= 0) {
+        updateRow(recipient.id, "status", "failed", "Invalid amount");
+        brokeEarly = true;
+        break;
+      }
+
+      if (!recipient.address.startsWith("SP") && !recipient.address.startsWith("SM")) {
+        updateRow(recipient.id, "status", "failed", "Invalid address");
+        brokeEarly = true;
+        break;
+      }
+
       updateRow(recipient.id, "status", "pending");
 
       try {
