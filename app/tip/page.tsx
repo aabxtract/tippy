@@ -107,6 +107,18 @@ export default function TipSetupPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const shareLink = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Tip me on Tippy!", url: tipLink });
+      } catch {
+        // User cancelled share — ignore
+      }
+    } else {
+      copyToClipboard();
+    }
+  };
+
   if (!userData) {
     return (
       <div className="flex flex-col items-center justify-center space-y-6 pt-12 text-center">
@@ -233,7 +245,7 @@ export default function TipSetupPage() {
                   <ExternalLink className="w-4 h-4" />
                   View Profile
                 </Link>
-                <button className="btn-secondary group flex-1 flex items-center justify-center gap-2">
+                <button onClick={shareLink} className="btn-secondary group flex-1 flex items-center justify-center gap-2">
                   <Share2 className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                   Share Link
                 </button>
