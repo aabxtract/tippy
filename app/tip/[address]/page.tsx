@@ -72,6 +72,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
 
       } catch (error) {
         console.error("Error fetching profile from contract:", error);
+        setProfileError("Failed to load profile. This address may not have a Tippy profile yet.");
       } finally {
         setLoadingProfile(false);
       }
