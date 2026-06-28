@@ -38,7 +38,7 @@ export default function BulkSendPage() {
     }
   };
 
-  const updateRow = (id: string, field: keyof Recipient, value: any) => {
+  const updateRow = (id: string, field: keyof Recipient, value: string | number) => {
     setRecipients(prev => prev.map(r => r.id === id ? { ...r, [field]: value } : r));
   };
 
@@ -49,7 +49,7 @@ export default function BulkSendPage() {
     Papa.parse(file, {
       header: false,
       skipEmptyLines: true,
-      complete: (results: Papa.ParseResult<any>) => {
+      complete: (results: Papa.ParseResult<string[]>) => {
         const rows = results.data as string[][];
         const newRecipients = rows.map(row => ({
           id: crypto.randomUUID(),
@@ -66,7 +66,7 @@ export default function BulkSendPage() {
     Papa.parse(pasteData, {
       header: false,
       skipEmptyLines: true,
-      complete: (results: Papa.ParseResult<any>) => {
+      complete: (results: Papa.ParseResult<string[]>) => {
         const rows = results.data as string[][];
         const newRecipients = rows.map(row => ({
           id: crypto.randomUUID(),
@@ -111,7 +111,7 @@ export default function BulkSendPage() {
           setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "idle" } : r));
           break; // Stop on cancel
         }
-      } catch (err) {
+      } catch {
         setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "failed", error: "Failed or Canceled" } : r));
         // Continue to next or stop? Usually stop on error for safety
         break;
@@ -193,7 +193,7 @@ export default function BulkSendPage() {
 
         <div className="space-y-3">
           <AnimatePresence initial={false}>
-            {recipients.map((recipient, index) => (
+            {recipients.map((recipient) => (
               <motion.div
                 key={recipient.id}
                 initial={{ opacity: 0, x: -10 }}
