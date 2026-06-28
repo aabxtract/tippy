@@ -20,6 +20,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
   const [profile, setProfile] = useState<{ name: string; bio: string; price: string } | null>(null);
   const [stats, setStats] = useState<{ total: string; count: string }>({ total: "0", count: "0" });
   const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   const amounts = ["1", "5", "10", "25", "50"];
 
