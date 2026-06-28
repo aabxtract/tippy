@@ -1,11 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertCircle, Loader2, SkipForward } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StatusBadgeProps {
-  status: "idle" | "pending" | "success" | "failed";
+  status: "idle" | "pending" | "success" | "failed" | "skipped";
   className?: string;
 }
 
@@ -34,6 +34,13 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       bg: "bg-red-500/10",
       textCol: "text-red-400",
       border: "border-red-500/20",
+    },
+    skipped: {
+      icon: SkipForward,
+      text: "Skipped",
+      bg: "bg-white/5",
+      textCol: "text-white/40",
+      border: "border-white/10",
     },
   }[status];
 
