@@ -34,7 +34,7 @@ export function useStacks() {
         if (storage?.addresses?.stx && storage.addresses.stx.length > 0) {
           const stxAddr = storage.addresses.stx[0].address;
           setAddress(stxAddr);
-          fetchBalance(stxAddr);
+          await fetchBalance(stxAddr);
         }
       }
     } catch (err) {
