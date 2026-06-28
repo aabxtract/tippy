@@ -151,7 +151,9 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
               {loadingProfile ? "Loading..." : (profile?.name || truncateAddress(address))}
             </h1>
             <p className="text-white/60 text-sm max-w-sm mx-auto line-clamp-2 italic">
-               {loadingProfile ? "Fetching profile bio..." : (profile?.bio || "Support my work with a quick STX tip! 🥤")}
+               {profileError
+                 ? <span className="text-red-400">{profileError}</span>
+                 : loadingProfile ? "Fetching profile bio..." : (profile?.bio || "Support my work with a quick STX tip! 🥤")}
             </p>
             <div className="flex items-center gap-1.5 text-white/40 text-[10px] uppercase font-bold justify-center tracking-widest pt-2">
               <Sparkles className="w-3 h-3 text-amber-400" />
