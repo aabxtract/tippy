@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { StatusBadge } from "@/components/ui/status-badge";
 
 export default function SendPage() {
-  const { userData, connectWallet, stxAddress } = useStacks();
+  const { userData, connectWallet } = useStacks();
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "failed">("idle");
@@ -40,10 +40,10 @@ export default function SendPage() {
       } else {
         setStatus("idle");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Transaction failed:", error);
       setStatus("failed");
-      setErrorMessage(error.message || "Something went wrong");
+      setErrorMessage(error instanceof Error ? error.message : "Something went wrong");
     }
   };
 

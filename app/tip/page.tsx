@@ -2,7 +2,7 @@
 
 import { useStacks } from "@/hooks/use-stacks";
 import { Heart, Copy, Check, Share2, ExternalLink, User, FileText, Coffee, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { CONTRACT_ADDRESS, CONTRACT_NAME } from "@/lib/stacks";
@@ -10,7 +10,6 @@ import { CONTRACT_ADDRESS, CONTRACT_NAME } from "@/lib/stacks";
 export default function TipSetupPage() {
   const { userData, stxAddress, connectWallet } = useStacks();
   const [copied, setCopied] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
   
   // Profile Form States
   const [name, setName] = useState("");
@@ -22,13 +21,7 @@ export default function TipSetupPage() {
     ? `${window.location.origin}/tip/${stxAddress}` 
     : "";
 
-  useEffect(() => {
-    if (stxAddress) {
-      fetchExistingProfile();
-    }
-  }, [stxAddress]);
-
-  const fetchExistingProfile = async () => {
+  const fetchExistingProfile = useCallback(async () => {
     try {
       const { fetchCallReadOnlyFunction, cvToJSON, principalCV } = await import("@stacks/transactions");
       const { STACKS_MAINNET } = await import("@stacks/network");
@@ -42,6 +35,7 @@ export default function TipSetupPage() {
         senderAddress: stxAddress,
       });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
       const json = cvToJSON(result) as any;
       if (json && json.value) {
         setName(json.value.name.value);
@@ -51,7 +45,13 @@ export default function TipSetupPage() {
     } catch (e) {
       console.error("Error fetching profile:", e);
     }
-  };
+  }, [stxAddress]);
+
+  useEffect(() => {
+    if (stxAddress) {
+      fetchExistingProfile();
+    }
+  }, [stxAddress, fetchExistingProfile]);
 
   const handleUpdateProfile = async () => {
     if (!userData) return;
@@ -71,7 +71,7 @@ export default function TipSetupPage() {
         ],
       });
 
-      if (response && (response as any).txid) {
+      if (response && "txid" in response && response.txid) {
         console.log("Profile updated:", response);
         setStatus("success");
         setTimeout(() => setStatus("idle"), 3000);

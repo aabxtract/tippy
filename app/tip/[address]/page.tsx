@@ -2,7 +2,7 @@
 
 import { use, useState, useEffect } from "react";
 import { useStacks } from "@/hooks/use-stacks";
-import { Heart, Send, CheckCircle2, AlertCircle, Loader2, Sparkles, User, ShieldCheck, Coffee, MessageSquare } from "lucide-react";
+import { CheckCircle2, Sparkles, User, ShieldCheck, Coffee, MessageSquare } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { CONTRACT_ADDRESS, CONTRACT_NAME } from "@/lib/stacks";
@@ -39,6 +39,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
           senderAddress: address,
         });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
         const profileJson = cvToJSON(profileResult) as any;
         if (profileJson && profileJson.value) {
           setProfile({
@@ -59,6 +60,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
           senderAddress: address,
         });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
         const statsJson = cvToJSON(statsResult) as any;
         if (statsJson && statsJson.value) {
           setStats({
@@ -98,7 +100,7 @@ export default function TipProfilePage({ params }: { params: Promise<{ address: 
         ],
       });
 
-      if (response && (response as any).txid) {
+      if (response && "txid" in response && response.txid) {
         console.log("Tip sent:", response);
         setStatus("success");
         setMessage("");
