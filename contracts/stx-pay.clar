@@ -1,4 +1,4 @@
-;; STX Pay - Smart Contract
+e 10 ;; STX Pay - Smart Contract
 ;; A utility contract for single sends, bulk sends, and personal tip jars.
 
 ;; Constants

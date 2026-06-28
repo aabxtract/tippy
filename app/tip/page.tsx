@@ -16,6 +16,7 @@ export default function TipSetupPage() {
   const [bio, setBio] = useState("");
   const [price, setPrice] = useState("5");
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "failed">("idle");
+  const [stats, setStats] = useState<{ total: string; count: string }>({ total: "0.00", count: "0" });
 
   const tipLink = typeof window !== "undefined" 
     ? `${window.location.origin}/tip/${stxAddress}` 
@@ -41,6 +42,24 @@ export default function TipSetupPage() {
         setName(json.value.name.value);
         setBio(json.value.bio.value);
         setPrice((parseInt(json.value.price.value) / 1000000).toString());
+      }
+
+      const statsResult = await fetchCallReadOnlyFunction({
+        contractAddress: CONTRACT_ADDRESS,
+        contractName: CONTRACT_NAME,
+        functionName: "get-stats",
+        functionArgs: [principalCV(stxAddress)],
+        network: STACKS_MAINNET,
+        senderAddress: stxAddress,
+      });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const statsJson = cvToJSON(statsResult) as any;
+      if (statsJson && statsJson.value) {
+        setStats({
+          total: (parseInt(statsJson.value["total-received"].value) / 1000000).toFixed(2),
+          count: statsJson.value["total-tips"].value,
+        });
       }
     } catch (e) {
       console.error("Error fetching profile:", e);
@@ -86,6 +105,18 @@ export default function TipSetupPage() {
     navigator.clipboard.writeText(tipLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const shareLink = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Tip me on Tippy!", url: tipLink });
+      } catch {
+        // User cancelled share — ignore
+      }
+    } else {
+      copyToClipboard();
+    }
   };
 
   if (!userData) {
@@ -214,7 +245,7 @@ export default function TipSetupPage() {
                   <ExternalLink className="w-4 h-4" />
                   View Profile
                 </Link>
-                <button className="btn-secondary group flex-1 flex items-center justify-center gap-2">
+                <button onClick={shareLink} className="btn-secondary group flex-1 flex items-center justify-center gap-2">
                   <Share2 className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                   Share Link
                 </button>
@@ -230,8 +261,8 @@ export default function TipSetupPage() {
                   <h3 className="text-lg font-bold">Lifetime Support</h3>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-black text-white">0.00 <span className="text-xs text-white/30 font-bold">STX</span></p>
-                  <p className="text-[10px] text-white/40">From 0 tips</p>
+                  <p className="text-2xl font-black text-white">{stats.total} <span className="text-xs text-white/30 font-bold">STX</span></p>
+                  <p className="text-[10px] text-white/40">From {stats.count} tips</p>
                 </div>
              </div>
           </div>

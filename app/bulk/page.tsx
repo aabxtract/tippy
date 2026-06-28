@@ -11,7 +11,7 @@ interface Recipient {
   id: string;
   address: string;
   amount: string;
-  status: "idle" | "pending" | "success" | "failed";
+  status: "idle" | "pending" | "success" | "failed" | "skipped";
   error?: string;
 }
 
@@ -90,10 +90,23 @@ export default function BulkSendPage() {
 
     setIsSending(true);
 
-    // We'll iterate through them. In a real app, one might use a smart contract for bulk transfers.
+    let brokeEarly = false;
     for (let i = 0; i < recipients.length; i++) {
       const recipient = recipients[i];
       if (!recipient.address || !recipient.amount) continue;
+
+      const parsedAmount = parseFloat(recipient.amount);
+      if (isNaN(parsedAmount) || parsedAmount <= 0) {
+        updateRow(recipient.id, "status", "failed", "Invalid amount");
+        brokeEarly = true;
+        break;
+      }
+
+      if (!recipient.address.startsWith("SP") && !recipient.address.startsWith("SM")) {
+        updateRow(recipient.id, "status", "failed", "Invalid address");
+        brokeEarly = true;
+        break;
+      }
 
       updateRow(recipient.id, "status", "pending");
 
@@ -108,14 +121,19 @@ export default function BulkSendPage() {
         if (response.txid) {
           setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "success" } : r));
         } else {
-          setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "idle" } : r));
-          break; // Stop on cancel
+          setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "failed", error: "Canceled" } : r));
+          brokeEarly = true;
+          break;
         }
       } catch {
-        setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "failed", error: "Failed or Canceled" } : r));
-        // Continue to next or stop? Usually stop on error for safety
+        setRecipients(prev => prev.map(r => r.id === recipient.id ? { ...r, status: "failed", error: "Failed" } : r));
+        brokeEarly = true;
         break;
       }
+    }
+
+    if (brokeEarly) {
+      setRecipients(prev => prev.map(r => r.status === "idle" ? { ...r, status: "skipped" } : r));
     }
 
     setIsSending(false);
